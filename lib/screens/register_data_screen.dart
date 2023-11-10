@@ -11,17 +11,31 @@ class RegisterDataScreen extends StatefulWidget {
 
 class _RegisterDataScreenState extends State<RegisterDataScreen> {
   final formKey = GlobalKey<FormState>();
+  String newUserName = '';
+  String newUserAddress = '';
+  String newUserEmail = '';
+  String newUserPassword = '';
 
   void goToRegisterDataScreen() {
+    validate();
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return RegisterScreen();
+        return RegisterScreen(
+          newUserAddress: newUserAddress,
+          newUserName: newUserName,
+        );
       },
     ));
   }
 
   void backToLoginScreen() {
     Navigator.pop(context);
+  }
+
+  void validate() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+    }
   }
 
   @override
@@ -60,9 +74,12 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                             child: Column(
                               children: [
                                 TextFormField(
+                                  onSaved: (newValue) {
+                                    newUserName = newValue!;
+                                  },
                                   keyboardType: TextInputType.name,
                                   decoration: const InputDecoration(
-                                      labelText: 'First Name'),
+                                      labelText: 'Full Name'),
                                   style: GoogleFonts.poppins(
                                       color: const Color(0xff7408C2)),
                                 ),
@@ -70,11 +87,9 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                                   height: 8,
                                 ),
                                 TextFormField(
-                                  keyboardType: TextInputType.name,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Last Name'),
-                                ),
-                                TextFormField(
+                                  onSaved: (newValue) {
+                                    newUserAddress = newValue!;
+                                  },
                                   keyboardType: TextInputType.name,
                                   decoration: const InputDecoration(
                                       labelText: 'Address'),

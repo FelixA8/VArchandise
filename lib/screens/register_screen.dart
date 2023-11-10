@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:varchandise/rest/rest_api.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen(
+      {super.key, required this.newUserAddress, required this.newUserName});
+  final String newUserName;
+  final String newUserAddress;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -13,6 +17,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool showPassword = true;
   bool showConfirmedPassword = true;
   final formKey = GlobalKey<FormState>();
+  String newUserEmail = '';
+  String newUserPassword = '';
 
   void changePasswordState() {
     setState(() {
@@ -24,6 +30,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() {
       showConfirmedPassword = !showConfirmedPassword;
     });
+  }
+
+  void validate() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+    }
+    await doRegister(widget.newUserName, widget.newUserAddress, newUserEmail,
+        newUserPassword);
+  }
+
+  doRegister(String name, String address, String email, String password) async {
+    var res = await userRegister(name, address, email, password);
+    if (res["success"]) {
+      print("NICE!");
+    } else if (res["success"] == false) {
+      print("ERROR :(");
+    }
   }
 
   void goToLoginScreen() {
@@ -40,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Image.asset('images/varchandise_logo2.jpg'),
@@ -53,6 +76,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: const EdgeInsets.only(left: 40),
                       child: TextFormField(
                         keyboardType: TextInputType.name,
+                        onSaved: (newValue) {
+                          newUserEmail = newValue!;
+                        },
                         style:
                             GoogleFonts.poppins(color: const Color(0xff7408C2)),
                         decoration: const InputDecoration(labelText: 'Email'),
@@ -66,6 +92,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: TextFormField(
                         keyboardType: TextInputType.name,
                         obscureText: showPassword,
+                        onSaved: (newValue) {
+                          newUserPassword = newValue!;
+                        },
                         style:
                             GoogleFonts.poppins(color: const Color(0xff7408C2)),
                         decoration: InputDecoration(
@@ -105,7 +134,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           backgroundColor:
                               MaterialStatePropertyAll(Color(0xff7408C2)),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          validate();
+                        },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),

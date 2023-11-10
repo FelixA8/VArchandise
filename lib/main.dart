@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:varchandise/screens/login_screen.dart';
+import 'package:varchandise/screens/splash_screen.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -13,6 +13,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const LoginScreen();
+    return const SplashScreen();
   }
 }

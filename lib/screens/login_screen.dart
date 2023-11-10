@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/rest/rest_login_api.dart';
 import 'package:varchandise/screens/home_screen.dart';
 import 'package:varchandise/screens/register_data_screen.dart';
 
@@ -13,6 +15,49 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   bool rememberBool = false;
+  SharedPreferences? _sharedPreferences;
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+
+  void changeScreenToHomeScreen(res) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(res: res),
+      ),
+    );
+  }
+
+  void validate() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      await doLogin(_enteredEmail, _enteredPassword);
+    }
+  }
+
+  void changeToSignInScreen() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return const RegisterDataScreen();
+      },
+    ));
+  }
+
+  doLogin(String email, String password) async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    var res = await userLogin(email.trim(), password.trim());
+    if (res["success"]) {
+      var userEmail = res['user'][0]['CustomerEmail'];
+      String customerID = res['user'][0]['CustomerID'].toString();
+      _sharedPreferences!.setString('customerID', customerID);
+      _sharedPreferences!.setString('usermail', userEmail);
+      _sharedPreferences!.setString('password', password);
+
+      changeScreenToHomeScreen(res);
+    } else if (res["success"] == false) {
+      print("WRONG PASSWORD");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
         borderRadius: BorderRadius.all(Radius.circular(50)),
       ),
     );
-
-    void changeToSignInScreen() {
-      Navigator.push(context, MaterialPageRoute(
-        builder: (context) {
-          return const RegisterDataScreen();
-        },
-      ));
-    }
 
     return Scaffold(
       backgroundColor: const Color(0xff7408C2),
@@ -72,6 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               TextFormField(
                                 keyboardType: TextInputType.name,
+                                onSaved: (newValue) {
+                                  _enteredEmail = newValue!;
+                                },
                                 decoration: loginformtextdecoration,
                                 style: GoogleFonts.poppins(
                                     color: const Color(0xff7408C2)),
@@ -82,6 +122,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextFormField(
                                   keyboardType: TextInputType.name,
                                   obscureText: true,
+                                  onSaved: (newValue) {
+                                    _enteredPassword = newValue!;
+                                  },
                                   decoration: loginformtextdecoration.copyWith(
                                       labelText: 'password'))
                             ],
@@ -136,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               backgroundColor: const Color(0xff7408C2),
                             ),
-                            onPressed: changeScreenToHomeScreen,
+                            onPressed: validate,
                             child: Text(
                               'Log In',
                               style: GoogleFonts.poppins(
@@ -210,15 +253,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void changeScreenToHomeScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomeScreen(),
       ),
     );
   }
