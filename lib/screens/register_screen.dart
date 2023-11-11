@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:varchandise/rest/rest_api.dart';
+import 'package:varchandise/rest/rest_login_api.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen(

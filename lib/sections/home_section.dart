@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/models/cart_models.dart';
 import 'package:varchandise/models/category_types.dart';
-import 'package:varchandise/models/dummy_product_models.dart';
+import 'package:varchandise/models/product_models.dart';
+import 'package:varchandise/rest/product_api.dart';
 import 'package:varchandise/widgets/home_productpreview.dart';
 
 class HomeSection extends StatefulWidget {
@@ -15,6 +17,17 @@ class HomeSection extends StatefulWidget {
 }
 
 class _HomeSectionState extends State<HomeSection> {
+  SharedPreferences? sharedPreferences;
+  String userID = "";
+  Future getAllProductsData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    userID = sharedPreferences!.getString('customerID').toString();
+    Future<List<Product>>? listOfProducts;
+    listOfProducts = getProduct(userID);
+    print(listOfProducts);
+    return listOfProducts;
+  }
+
   @override
   Widget build(BuildContext context) {
     var name = widget.res['user'][0]['CustomerName'];
@@ -142,19 +155,25 @@ class _HomeSectionState extends State<HomeSection> {
                     },
                   ),
                 ),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: listOfProducts.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, childAspectRatio: (393 / 600)),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: ProductPreviewHome(
-                        product: listOfProducts[index],
-                      ),
-                    );
+                FutureBuilder(
+                  future: getAllProductsData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      // getMarkers() throws an exception
+                      return Center(child: Text(snapshot.error.toString()));
+                    }
+                    if (!snapshot.hasData) {
+                      // getMarkers() returns null
+                      return const Center(
+                          child: Text(
+                              "Oops, you do not have any history of buying"));
+                    }
+                    if (snapshot.hasData) {
+                      List<Product> listProducts =
+                          snapshot.data as List<Product>;
+                      return ProductPreviewHome(listProducts: listProducts);
+                    }
+                    return const Center();
                   },
                 ),
               ],

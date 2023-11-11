@@ -15,9 +15,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void logOut() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences!.clear();
-    int count = 0;
     // ignore: use_build_context_synchronously
-    Navigator.of(context).popUntil((_) => count++ > 1);
+    Navigator.pop(context);
   }
 
   @override

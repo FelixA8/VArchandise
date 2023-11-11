@@ -17,7 +17,7 @@ class _HistorySectionState extends State<HistorySection> {
           SizedBox(
             height: 20,
           ),
-          HistoryListView()
+          Expanded(child: HistoryListView())
         ],
       ),
     );
