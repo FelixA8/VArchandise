@@ -21,6 +21,5 @@ class _HistorySectionState extends State<HistorySection> {
         ],
       ),
     );
-    ;
   }
 }

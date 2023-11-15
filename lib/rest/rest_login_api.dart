@@ -13,7 +13,7 @@ Future userLogin(String email, String password) async {
   return decodedData;
 }
 
-//GET TOTAL USER
+//GET USER HIGHEST ID
 Future getUserID() async {
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.get(

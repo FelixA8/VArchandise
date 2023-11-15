@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/models/product_models.dart';
+import 'package:varchandise/rest/cartlist_api.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key, required this.product});
@@ -12,6 +14,14 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  SharedPreferences? sharedPreferences;
+
+  void addNewCart() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    String userID = sharedPreferences!.getString('customerID').toString();
+    createNewUserCart(userID, widget.product.productID, 1, false);
+  }
+
   @override
   Widget build(BuildContext context) {
     void backToHomeScreen() {
@@ -48,6 +58,9 @@ class _ProductScreenState extends State<ProductScreen> {
               width: 30,
             ),
             GestureDetector(
+              onTap: () {
+                addNewCart();
+              },
               child: Image.asset("images/CartButton.jpg"),
             )
           ],
