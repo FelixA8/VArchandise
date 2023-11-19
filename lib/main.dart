@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:varchandise/screens/splash_screen.dart';
 
 void main() {
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+    home: const MyApp(),
   ));
 }
 

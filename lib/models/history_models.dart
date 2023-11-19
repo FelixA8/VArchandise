@@ -43,4 +43,11 @@ class History {
       productName: json["ProductName"].toString(),
       productPrice: json["ProductPrice"] as int,
       imgURL: json["ProductImage"].toString());
+
+  String get formatDate {
+    DateTime now = DateTime.parse(datePurchased).toLocal();
+    var formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+    var formatted = formatter.format(now);
+    return formatted;
+  }
 }

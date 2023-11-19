@@ -21,7 +21,6 @@ Future getUserID() async {
     headers: {"Accept": "Application/json"},
   );
   var decodedData = jsonDecode(response.body.toString());
-  print(decodedData);
   return decodedData;
 }
 
@@ -42,9 +41,14 @@ Future userRegister(
     String username, String address, String email, String password) async {
   String baseUrl = "http://10.0.2.2:3000";
   var data = await getUserID();
-  var newID = data[0]["CustomerID"];
-  int inputID = extractAndIncrement(newID);
-  var id = 'CU${inputID.toString().padLeft(3, '0')}';
+  var id = "";
+  if (data.length == 0) {
+    id = 'CU001';
+  } else {
+    var newID = data[0]["CustomerID"];
+    int inputID = extractAndIncrement(newID);
+    id = 'CU${inputID.toString().padLeft(3, '0')}';
+  }
   //LAST CHECKPOINT
   final response = await http.post(Uri.parse('$baseUrl/users/register'), body: {
     'name': username,

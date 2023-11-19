@@ -49,9 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res["success"]) {
       var userEmail = res['user'][0]['CustomerEmail'];
       String customerID = res['user'][0]['CustomerID'].toString();
+      String userName = res['user'][0]['CustomerName'].toString();
       _sharedPreferences!.setString('customerID', customerID);
       _sharedPreferences!.setString('usermail', userEmail);
       _sharedPreferences!.setString('password', password);
+      _sharedPreferences!.setString('username', userName);
 
       changeScreenToHomeScreen(res);
     } else if (res["success"] == false) {

@@ -46,6 +46,7 @@ dependencies:
   sprintf: ^7.0.0
   carousel_slider: ^4.2.1
   flutter_floating_bottom_bar: ^1.2.0
+  action_slider: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,7 @@ flutter:
     - images/varchandise_logo.png
     - images/varchandise_logo2.jpg
     - images/CartButton.jpg
+    - images/varchandise_logo3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

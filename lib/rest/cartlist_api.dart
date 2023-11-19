@@ -54,14 +54,12 @@ Future<bool> createNewUserCart(
   }
   var data = await getCartID();
   if (data.length == 0) {
-    id = 'CU001';
+    id = 'CA001';
   } else {
     var newID = data[0]["CartID"];
     int inputID = extractAndIncrement(newID);
-    id = 'CU${inputID.toString().padLeft(3, '0')}';
+    id = 'CA${inputID.toString().padLeft(3, '0')}';
   }
-
-  print(id);
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http
       .post(Uri.parse('$baseUrl/users/insert-new-user-carts'), headers: {
@@ -104,7 +102,6 @@ Future<bool> updateNewUserCart(
 
 //DELETE USER CART
 Future<bool> deleteUserCart(String cartID, String userID) async {
-  String isSelect = "";
   String baseUrl = "http://10.0.2.2:3000";
   final response =
       await http.delete(Uri.parse('$baseUrl/users/delete-user-cart'), headers: {
@@ -123,10 +120,13 @@ Future<String> getTotalCartPrice(String userID) async {
   String totalFormatted = "";
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.post(Uri.parse('$baseUrl/users/SumAllCartPrice'),
-      headers: {"Accept": "Application/json"}, body: {"userID": "CU001"});
+      headers: {"Accept": "Application/json"}, body: {"userID": userID});
   var decodedData = jsonDecode(response.body);
-  total = decodedData["TotalPrice"];
-  totalFormatted = getFormattedTotalPrice(int.parse(total));
+  if (decodedData["TotalPrice"] != null) {
+    total = decodedData["TotalPrice"];
+    totalFormatted = getFormattedTotalPrice(int.parse(total));
+  }
+
   return totalFormatted;
 }
 

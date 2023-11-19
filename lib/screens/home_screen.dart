@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:varchandise/sections/profile_screen.dart';
+import 'package:varchandise/sections/profile_sesction.dart';
 import 'package:varchandise/sections/history_section.dart';
 import 'package:varchandise/sections/home_section.dart';
 import 'package:varchandise/sections/shopping_cart_section.dart';
@@ -55,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     changeCurrentIndex();
   }

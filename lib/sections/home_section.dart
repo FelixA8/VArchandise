@@ -24,7 +24,6 @@ class _HomeSectionState extends State<HomeSection> {
     userID = sharedPreferences!.getString('customerID').toString();
     Future<List<Product>>? listOfProducts;
     listOfProducts = getProduct(userID);
-    print(listOfProducts);
     return listOfProducts;
   }
 
@@ -98,7 +97,7 @@ class _HomeSectionState extends State<HomeSection> {
                         borderRadius: BorderRadius.circular(10.0),
                         image: const DecorationImage(
                           image: NetworkImage(
-                              "https://via.placeholder.com/1600x900"),
+                              "https://www.trinityhealth.org/wp-content/uploads/2019/04/1600x900.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -109,7 +108,7 @@ class _HomeSectionState extends State<HomeSection> {
                         borderRadius: BorderRadius.circular(10.0),
                         image: const DecorationImage(
                           image: NetworkImage(
-                              "https://via.placeholder.com/1600x900"),
+                              "https://www.trinityhealth.org/wp-content/uploads/2019/04/1600x900.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -120,7 +119,7 @@ class _HomeSectionState extends State<HomeSection> {
                         borderRadius: BorderRadius.circular(10.0),
                         image: const DecorationImage(
                           image: NetworkImage(
-                              "https://via.placeholder.com/1600x900"),
+                              "https://www.trinityhealth.org/wp-content/uploads/2019/04/1600x900.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -137,6 +136,9 @@ class _HomeSectionState extends State<HomeSection> {
                         const Duration(milliseconds: 800),
                     viewportFraction: 0.8,
                   ),
+                ),
+                const SizedBox(
+                  height: 12,
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),

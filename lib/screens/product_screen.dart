@@ -16,6 +16,29 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   SharedPreferences? sharedPreferences;
 
+  showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: SizedBox(
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Center(
+                  child: Text(
+                    "Product has been added to cart",
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   void addNewCart() async {
     sharedPreferences = await SharedPreferences.getInstance();
     String userID = sharedPreferences!.getString('customerID').toString();
@@ -59,6 +82,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
             GestureDetector(
               onTap: () {
+                showAlertDialog(context);
                 addNewCart();
               },
               child: Image.asset("images/CartButton.jpg"),

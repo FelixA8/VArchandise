@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/rest/get_history_api.dart';
+import 'package:varchandise/sections/profile%20sections/edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,11 +14,114 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   SharedPreferences? _sharedPreferences;
+  String userID = "";
+  String userName = "";
+  String userMail = "";
   void logOut() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences!.clear();
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
+  }
+
+  void getUserData() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    userID = _sharedPreferences!.getString('customerID').toString();
+    userName = _sharedPreferences!.getString('username').toString();
+    userMail = _sharedPreferences!.getString('usermail').toString();
+  }
+
+  void clearHistory() async {
+    await deleteUserHistory(userID);
+  }
+
+  clearHistoryAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: SizedBox(
+              height: 90,
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Center(
+                      child: Text(
+                        "Do you want to clear all the history?",
+                        style: GoogleFonts.poppins(fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    color: Color.fromRGBO(0, 0, 0, 0.7),
+                    height: 0,
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () {
+                                clearHistory();
+                                Navigator.pop(context);
+                              },
+                              child: Center(
+                                child: Text(
+                                  "Yes",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: const Color(0xff4CAF50)),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const VerticalDivider(
+                            color: Color.fromRGBO(0, 0, 0, 0.7),
+                            width: 0,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "No",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: const Color(0xffDC0000)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void goToEditProfileScreen() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProfileScreen(),
+        ));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
   }
 
   @override
@@ -62,7 +167,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             backgroundColor: const Color(0xff7408C2),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            print('bi');
+                            goToEditProfileScreen();
+                          },
                           child: Text(
                             'Edit Profile',
                             style: GoogleFonts.poppins(
@@ -110,7 +218,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   keyword: "",
                   showArrow: true),
               EditProfileCategories(
-                  onTap: () {},
+                  onTap: () {
+                    clearHistoryAlertDialog(context);
+                  },
                   description: "",
                   title: "Clear History",
                   icon: const Icon(FontAwesomeIcons.trashCan),

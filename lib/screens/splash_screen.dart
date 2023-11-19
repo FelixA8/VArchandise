@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkUserSavedLogin() async {
     sharedPreferences = await SharedPreferences.getInstance();
-
     if (sharedPreferences!.getString('customerID') == null &&
         sharedPreferences!.getString('usermail') == null) {
       currentScreen = const LoginScreen();

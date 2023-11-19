@@ -10,7 +10,6 @@ Future<List<Product>> getProduct(String productID) async {
   final response = await http.get(Uri.parse('$baseUrl/users/get-all-product'),
       headers: {"Accept": "Application/json"});
   var decodedData = jsonDecode(response.body);
-  print(decodedData);
   List<Product> list = [];
   for (var i in decodedData) {
     Product fetchedData = Product.fromJson(i);
@@ -26,7 +25,6 @@ Future getSpecificProduct(String productID) async {
       Uri.parse('$baseUrl/users/get-product?id=$productID'),
       headers: {"Accept": "Application/json"});
   var decodedData = jsonDecode(response.body);
-  print(decodedData);
   List<Product> list = [];
   for (var i in decodedData) {
     Product fetchedData = Product.fromJson(i);
