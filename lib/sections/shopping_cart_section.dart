@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:varchandise/widgets/cart_listview.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShoppingCartSection extends StatefulWidget {
   const ShoppingCartSection({super.key});
@@ -11,13 +12,21 @@ class ShoppingCartSection extends StatefulWidget {
 class _ShoppingCartSectionState extends State<ShoppingCartSection> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Column(
         children: [
-          SizedBox(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              'Cart',
+              style: GoogleFonts.poppins(
+                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(
             height: 20,
           ),
-          Expanded(child: CartListView()),
+          const Expanded(child: CartListView()),
         ],
       ),
     );

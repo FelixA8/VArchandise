@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:varchandise/sections/profile_sesction.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/sections/profile_section.dart';
 import 'package:varchandise/sections/history_section.dart';
 import 'package:varchandise/sections/home_section.dart';
 import 'package:varchandise/sections/shopping_cart_section.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.res});
-  final dynamic res;
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -15,17 +15,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentSectionIndex = 0;
+  SharedPreferences? _sharedPreferences;
+  String userID = "";
+  String userName = "";
+  String userMail = "";
   Widget? currentScreen;
   Color homeButtonColor = const Color(0xff7408C2);
   Color cartButtonColor = const Color(0xff8A8A8A);
   Color historyButtonColor = const Color(0xff8A8A8A);
   Color accountButtonColor = const Color(0xff8A8A8A);
 
+  void getUserData() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    userID = _sharedPreferences!.getString('customerID').toString();
+    userName = _sharedPreferences!.getString('username').toString();
+    userMail = _sharedPreferences!.getString('usermail').toString();
+    setState(() {});
+  }
+
   void changeCurrentIndex() {
     setState(() {
       if (currentSectionIndex == 0) {
         currentScreen = HomeSection(
-          res: widget.res,
+          userID: userID,
+          userMail: userMail,
+          userName: userName,
         );
         homeButtonColor = const Color(0xff7408C2);
         cartButtonColor = const Color(0xff8A8A8A);
@@ -44,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
         historyButtonColor = const Color(0xff7408C2);
         accountButtonColor = const Color(0xff8A8A8A);
       } else if (currentSectionIndex == 3) {
-        currentScreen = const ProfileScreen();
+        currentScreen = ProfileSection();
         homeButtonColor = const Color(0xff8A8A8A);
         cartButtonColor = const Color(0xff8A8A8A);
         historyButtonColor = const Color(0xff8A8A8A);
@@ -61,16 +75,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getUserData();
     return Scaffold(
       body: currentScreen,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         height: 50,
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(1),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: const Offset(0, 3),

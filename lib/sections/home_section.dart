@@ -9,27 +9,37 @@ import 'package:varchandise/rest/product_api.dart';
 import 'package:varchandise/widgets/home_productpreview.dart';
 
 class HomeSection extends StatefulWidget {
-  const HomeSection({super.key, required this.res});
-  final dynamic res;
+  const HomeSection(
+      {super.key,
+      required this.userID,
+      required this.userMail,
+      required this.userName});
+  final String userID;
+  final String userName;
+  final String userMail;
 
   @override
   State<HomeSection> createState() => _HomeSectionState();
 }
 
 class _HomeSectionState extends State<HomeSection> {
-  SharedPreferences? sharedPreferences;
-  String userID = "";
+  SharedPreferences? _sharedPreferences;
+
   Future getAllProductsData() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    userID = sharedPreferences!.getString('customerID').toString();
     Future<List<Product>>? listOfProducts;
-    listOfProducts = getProduct(userID);
+    listOfProducts = getProduct(widget.userID);
     return listOfProducts;
+  }
+
+  void logOut() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences!.clear();
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    var name = widget.res['user'][0]['CustomerName'];
     return SafeArea(
         top: true,
         bottom: false,
@@ -50,7 +60,7 @@ class _HomeSectionState extends State<HomeSection> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    name,
+                    widget.userName,
                     style: GoogleFonts.poppins(
                         fontSize: 14, fontWeight: FontWeight.bold),
                   ),
@@ -168,7 +178,7 @@ class _HomeSectionState extends State<HomeSection> {
                       // getMarkers() returns null
                       return const Center(
                           child: Text(
-                              "Oops, you do not have any history of buying"));
+                              "Oops, you do not have any product, ask your admin to put one :D"));
                     }
                     if (snapshot.hasData) {
                       List<Product> listProducts =

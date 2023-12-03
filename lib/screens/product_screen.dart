@@ -15,6 +15,8 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   SharedPreferences? sharedPreferences;
+  String information1 = "Product has been added to cart";
+  String information2 = "Sorry, this item is out of stock!";
 
   showAlertDialog(BuildContext context) {
     showDialog(
@@ -29,7 +31,9 @@ class _ProductScreenState extends State<ProductScreen> {
                 padding: const EdgeInsets.all(12.0),
                 child: Center(
                   child: Text(
-                    "Product has been added to cart",
+                    widget.product.productStock == 0
+                        ? information2
+                        : information1,
                     style: GoogleFonts.poppins(fontSize: 14),
                   ),
                 ),
@@ -47,47 +51,32 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    void backToHomeScreen() {
-      Navigator.pop(context);
-    }
-
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 200,
-              height: 60,
-              child: OutlinedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  backgroundColor: const Color(0xff7408C2),
-                ),
-                onPressed: () {},
-                child: Text(
-                  'Buy Now',
-                  style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
+        child: Container(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+          width: double.infinity,
+          height: 60,
+          child: OutlinedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
+              backgroundColor: const Color(0xff7408C2),
             ),
-            const SizedBox(
-              width: 30,
+            onPressed: () {
+              showAlertDialog(context);
+              widget.product.productStock == 0 ? () {} : addNewCart();
+            },
+            child: Text(
+              'Add to Cart',
+              style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
             ),
-            GestureDetector(
-              onTap: () {
-                showAlertDialog(context);
-                addNewCart();
-              },
-              child: Image.asset("images/CartButton.jpg"),
-            )
-          ],
+          ),
         ),
       ),
       body: SafeArea(
@@ -98,7 +87,7 @@ class _ProductScreenState extends State<ProductScreen> {
               Stack(
                 children: [
                   AspectRatio(
-                    aspectRatio: 393 / 500,
+                    aspectRatio: 1 / 1,
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(25),
@@ -122,9 +111,30 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                   ),
+                  Container(
+                    height: 350.0,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        gradient: LinearGradient(
+                            begin: FractionalOffset.topCenter,
+                            end: FractionalOffset.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.4),
+                              Colors.white.withOpacity(0.0),
+                            ],
+                            stops: const [
+                              0.4,
+                              1,
+                            ])),
+                  ),
                   IconButton(
-                    onPressed: backToHomeScreen,
-                    icon: const Icon(FontAwesomeIcons.arrowLeft),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.circleChevronLeft,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -132,7 +142,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 height: 25,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -144,28 +154,58 @@ class _ProductScreenState extends State<ProductScreen> {
                     Text(
                       widget.product.getFormattedPrice,
                       style: GoogleFonts.poppins(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Stocks Avaiable: ${widget.product.productStock.toString()} items',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
                   widget.product.productCategory.name,
                   style: GoogleFonts.poppins(
                     fontSize: 12,
-                    color: const Color.fromRGBO(0, 0, 0, 0.7),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Divider(
+                height: 5,
+                thickness: 2,
+                color: Theme.of(context).dividerColor,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  'Description',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
                   widget.product.productDescription,
                   style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: const Color.fromRGBO(0, 0, 0, 0.7),
+                    fontSize: 12,
                   ),
                 ),
               ),

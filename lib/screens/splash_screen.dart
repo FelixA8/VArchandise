@@ -23,9 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       String email = sharedPreferences!.getString('usermail').toString();
       String password = sharedPreferences!.getString('password').toString();
-      var res = await userLogin(email.trim(), password.trim());
+      await userLogin(email.trim(), password.trim());
       setState(() {
-        currentScreen = HomeScreen(res: res);
+        currentScreen = HomeScreen();
       });
     }
   }

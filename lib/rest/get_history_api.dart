@@ -63,7 +63,7 @@ Future createUserHistory(String userID, String productID, int purchasedAmount,
     'userID': userID
   });
   var decodedData = jsonDecode(response.body);
-  return "success";
+  return decodedData;
 }
 
 Future deleteUserHistory(String userID) async {
@@ -72,4 +72,5 @@ Future deleteUserHistory(String userID) async {
       Uri.parse('$baseUrl/users/delete-user-history'),
       headers: {"Accept": "Application/json"},
       body: {'userID': userID});
+  return response;
 }

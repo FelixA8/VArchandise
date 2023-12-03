@@ -45,9 +45,14 @@ class _HistoryListViewState extends State<HistoryListView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Total Price: ${listHistory[index].formatDate}',
+                            listHistory[index].formatDate,
                             style: GoogleFonts.poppins(
-                                fontSize: 14, fontWeight: FontWeight.bold),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
                           ),
                           Container(
                             decoration: BoxDecoration(
@@ -96,7 +101,8 @@ class _HistoryListViewState extends State<HistoryListView> {
                                         listHistory[index].productName,
                                         style: GoogleFonts.poppins(
                                             fontSize: 14,
-                                            fontWeight: FontWeight.w500),
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black),
                                       ),
                                       Text(
                                         '${listHistory[index].purchasedAmount.toString()} items',
@@ -106,9 +112,9 @@ class _HistoryListViewState extends State<HistoryListView> {
                                                 0, 0, 0, 0.7)),
                                       ),
                                       Text(
-                                        'Paid',
-                                        style:
-                                            GoogleFonts.poppins(fontSize: 12),
+                                        'Status: Paid',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 12, color: Colors.black),
                                       ),
                                       Text(
                                         listHistory[index]
@@ -120,7 +126,8 @@ class _HistoryListViewState extends State<HistoryListView> {
                                         'Total Price: ${listHistory[index].getFormattedTotalPrice}',
                                         style: GoogleFonts.poppins(
                                             fontSize: 14,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
                                       ),
                                     ],
                                   ),

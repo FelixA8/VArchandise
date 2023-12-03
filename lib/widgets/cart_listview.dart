@@ -1,10 +1,12 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/models/cart_models.dart';
 import 'package:varchandise/rest/cartlist_api.dart';
 import 'package:varchandise/rest/get_history_api.dart';
+import 'package:varchandise/screens/purchase_success_screen.dart';
 import 'package:varchandise/widgets/cart_individual_ui.dart';
 
 class CartListView extends StatefulWidget {
@@ -24,6 +26,35 @@ class _CartListViewState extends State<CartListView> {
     Future<List<Cart>>? listOfCart;
     listOfCart = getAllUserCart(userID);
     return listOfCart;
+  }
+
+  String getFormattedProductPrice(price) {
+    return NumberFormat.currency(
+            locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0)
+        .format(price);
+  }
+
+  showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: SizedBox(
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Center(
+                  child: Text(
+                    'The amount you requested is exceeding the product stock.',
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -104,7 +135,7 @@ class _CartListViewState extends State<CartListView> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      Text(totalPrice.toString(),
+                                      Text(getFormattedProductPrice(totalPrice),
                                           style: GoogleFonts.poppins(
                                             fontSize: 16,
                                           )),
@@ -118,7 +149,7 @@ class _CartListViewState extends State<CartListView> {
                                     rolling: true,
                                     width: double.infinity,
                                     backgroundColor: Colors.white,
-                                    toggleColor: Color(0xff7408C2),
+                                    toggleColor: const Color(0xff7408C2),
                                     iconAlignment: Alignment.centerRight,
                                     loadingIcon: const SizedBox(
                                         width: 55,
@@ -141,32 +172,54 @@ class _CartListViewState extends State<CartListView> {
                                       ),
                                     ),
                                     action: (controller) async {
+                                      bool overAmount = false;
                                       for (int i = 0;
                                           i < listCart.length;
                                           i++) {
-                                        if (listCart[i].isSelected == true) {
-                                          print(listCart[i].productID);
-                                          await createUserHistory(
-                                              userID,
-                                              listCart[i].productID,
-                                              listCart[i].cartAmount,
-                                              totalPrice);
-                                          await deleteUserCart(
-                                              listCart[i].cartID, userID);
+                                        if (listCart[i].isSelected == true &&
+                                            listCart[i].productStock <
+                                                listCart[i].cartAmount) {
+                                          overAmount = true;
+                                          break;
                                         }
                                       }
-                                      setState(() {});
-                                      controller
-                                          .loading(); //starts loading animation
-                                      await Future.delayed(
-                                          const Duration(seconds: 3));
-                                      controller
-                                          .success(); //starts success animation
-                                      await Future.delayed(
-                                          const Duration(seconds: 1));
-                                      controller.reset(); //resets the slider
+                                      if (overAmount == false) {
+                                        for (int i = 0;
+                                            i < listCart.length;
+                                            i++) {
+                                          if (listCart[i].isSelected == true) {
+                                            await updateProductStock(
+                                                listCart[i].productID,
+                                                listCart[i].cartAmount);
+                                            await createUserHistory(
+                                                userID,
+                                                listCart[i].productID,
+                                                listCart[i].cartAmount,
+                                                totalPrice);
+                                            await deleteUserCart(
+                                                listCart[i].cartID, userID);
+                                          }
+                                        }
+                                        setState(() {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SuccessPurchaseScreen(),
+                                              ));
+                                        });
+                                        await Future.delayed(
+                                            const Duration(seconds: 1));
+                                        controller.reset(); //resets the slider
+                                      } else {
+                                        showAlertDialog(context);
+                                      }
                                     },
-                                    child: const Text('Swipe right'),
+                                    child: Text(
+                                      'Swipe right to purchase',
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.black),
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 36,

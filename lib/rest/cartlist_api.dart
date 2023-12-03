@@ -130,6 +130,21 @@ Future<String> getTotalCartPrice(String userID) async {
   return totalFormatted;
 }
 
+//UPDATE PRODUCT STOCK
+Future<bool> updateProductStock(String cartID, int cartAmount) async {
+  String baseUrl = "http://10.0.2.2:3000";
+  final response = await http
+      .post(Uri.parse('$baseUrl/users/update-product-stock'), headers: {
+    "Accept": "Application/json"
+  }, body: {
+    'productID': cartID,
+    'cartAmount': cartAmount.toString(),
+  });
+  var decodedData = jsonDecode(response.body);
+
+  return decodedData["success"];
+}
+
 String getFormattedTotalPrice(int totalPrice) {
   return NumberFormat.currency(
           locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0)

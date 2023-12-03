@@ -40,13 +40,13 @@ class ListCartUI extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         width: 200,
-        height: 90,
+        height: 110,
         child: Padding(
           padding: const EdgeInsets.all(7.0),
           child: Row(
             children: [
               AspectRatio(
-                aspectRatio: 73 / 78,
+                aspectRatio: 1 / 1,
                 child: Container(
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(
@@ -66,21 +66,35 @@ class ListCartUI extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    listCart[index].productTitle,
-                    style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.w500),
+                  Flexible(
+                    child: Text(
+                      listCart[index].productTitle,
+                      style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black),
+                    ),
                   ),
                   Text(
                     listCart[index].category.name,
                     style: GoogleFonts.poppins(
-                        fontSize: 10,
+                        fontSize: 12,
                         color: const Color.fromRGBO(0, 0, 0, 0.7)),
                   ),
                   Text(
-                    listCart[index].getFormattedProductPrice,
+                    'Stock: ${listCart[index].productStock}',
                     style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.bold),
+                        fontSize: 12,
+                        color: const Color.fromRGBO(0, 0, 0, 0.7)),
+                  ),
+                  Flexible(
+                    child: Text(
+                      listCart[index].getFormattedProductPrice,
+                      style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
                   ),
                 ],
               ),
@@ -95,6 +109,10 @@ class ListCartUI extends StatelessWidget {
                     child: Checkbox(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4)),
+                      side: MaterialStateBorderSide.resolveWith(
+                        (states) => const BorderSide(
+                            width: 1.0, color: Color(0xff7408C2)),
+                      ),
                       activeColor: const Color(0xff7408C2),
                       value: listCart[index].isSelected,
                       onChanged: (value) {
@@ -165,7 +183,8 @@ class ListCartUI extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 10),
                           child: Text(
                             listCart[index].cartAmount.toString(),
-                            style: GoogleFonts.poppins(fontSize: 14),
+                            style: GoogleFonts.poppins(
+                                fontSize: 14, color: Colors.black),
                           ),
                         ),
                         const SizedBox(

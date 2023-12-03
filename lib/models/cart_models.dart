@@ -18,6 +18,7 @@ class Cart {
       required this.cartAmount,
       required this.customerID,
       required this.productID,
+      required this.productStock,
       required this.totalPrice});
   int cartAmount;
   bool isSelected;
@@ -29,6 +30,7 @@ class Cart {
   String productID;
   String customerID;
   int totalPrice;
+  int productStock;
 
   String get getFormattedProductPrice {
     return NumberFormat.currency(
@@ -65,16 +67,16 @@ class Cart {
     }
 
     return Cart(
-      cartID: json["CartID"].toString(),
-      customerID: json["CustomerID"].toString(),
-      productID: json["ProductID"].toString(),
-      cartAmount: json["CartAmount"] as int,
-      category: category,
-      isSelected: isSelected,
-      productTitle: json["ProductName"].toString(),
-      price: json["ProductPrice"] as int,
-      imgURL: json["ProductImage"].toString(),
-      totalPrice: json["TotalPrice"] as int,
-    );
+        cartID: json["CartID"].toString(),
+        customerID: json["CustomerID"].toString(),
+        productID: json["ProductID"].toString(),
+        cartAmount: json["CartAmount"] as int,
+        category: category,
+        isSelected: isSelected,
+        productTitle: json["ProductName"].toString(),
+        price: json["ProductPrice"] as int,
+        imgURL: json["ProductImage"].toString(),
+        totalPrice: json["TotalPrice"] as int,
+        productStock: json["ProductStock"] as int);
   }
 }

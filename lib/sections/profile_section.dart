@@ -1,18 +1,23 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/provider.dart';
 import 'package:varchandise/rest/get_history_api.dart';
+import 'package:varchandise/sections/profile%20sections/edit_address.dart';
 import 'package:varchandise/sections/profile%20sections/edit_profile.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileSection extends StatefulWidget {
+  const ProfileSection({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileSection> createState() => _ProfileSectionState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileSectionState extends State<ProfileSection> {
   SharedPreferences? _sharedPreferences;
   String userID = "";
   String userName = "";
@@ -29,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userID = _sharedPreferences!.getString('customerID').toString();
     userName = _sharedPreferences!.getString('username').toString();
     userMail = _sharedPreferences!.getString('usermail').toString();
+    setState(() {});
   }
 
   void clearHistory() async {
@@ -126,14 +132,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+    getUserData();
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'Profile',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -147,12 +164,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Felix Anderson',
+                        userName,
                         style: GoogleFonts.poppins(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'felixanderson@gmail.com',
+                        userMail,
                         style: GoogleFonts.poppins(fontSize: 12),
                       ),
                       const SizedBox(
@@ -168,7 +185,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             backgroundColor: const Color(0xff7408C2),
                           ),
                           onPressed: () {
-                            print('bi');
                             goToEditProfileScreen();
                           },
                           child: Text(
@@ -211,7 +227,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 thickness: 1,
               ),
               EditProfileCategories(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditAddressScreen(),
+                        ));
+                  },
                   description: "",
                   title: "Address",
                   icon: const Icon(FontAwesomeIcons.locationDot),
@@ -227,7 +249,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   keyword: "",
                   showArrow: true),
               EditProfileCategories(
-                  onTap: () {},
+                  onTap: () {
+                    bool value = themeChange.darkTheme;
+                    themeChange.darkTheme = !value;
+                  },
                   description: "",
                   title: "Change Theme",
                   icon: const Icon(FontAwesomeIcons.yinYang),

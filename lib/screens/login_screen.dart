@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/admin-components/admin-rest-api/admin_login.dart';
+import 'package:varchandise/admin-components/admin-screens/admin_home_screen.dart';
+import 'package:varchandise/admin-components/admin_bearertoken.dart' as bt;
 import 'package:varchandise/rest/rest_login_api.dart';
 import 'package:varchandise/screens/home_screen.dart';
 import 'package:varchandise/screens/register_data_screen.dart';
@@ -19,19 +23,35 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredEmail = '';
   var _enteredPassword = '';
 
+  final _oauth = GoogleSignIn(scopes: ['email']);
+  void signInGoogle() async {
+    final GoogleSignInAccount? account = await _oauth.signIn();
+    if (account != null) {
+      print("User's email: ${account.email}");
+      print("User's name: ${account.displayName}");
+    }
+  }
+
   void changeScreenToHomeScreen(res) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeScreen(res: res),
+        builder: (context) => const HomeScreen(),
       ),
     );
   }
 
-  void validate() async {
+  void userValidate() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      await doLogin(_enteredEmail, _enteredPassword);
+      await loginUser(_enteredEmail, _enteredPassword);
+    }
+  }
+
+  void adminValidate() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      await loginAdmin(_enteredEmail, _enteredPassword);
     }
   }
 
@@ -43,7 +63,22 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
   }
 
-  doLogin(String email, String password) async {
+  loginAdmin(email, password) async {
+    var res = await adminLogin(email, password);
+    if (res["success"]) {
+      bt.bearerToken = "LSKDJFLS.DFKJSA.DF3DJKC3I2U";
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AdminHomeScreen(),
+          ));
+    } else {
+      //ERROR
+    }
+  }
+
+  loginUser(String email, String password) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     var res = await userLogin(email.trim(), password.trim());
     if (res["success"]) {
@@ -167,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 65,
+                        height: 25,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 44),
@@ -181,9 +216,35 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               backgroundColor: const Color(0xff7408C2),
                             ),
-                            onPressed: validate,
+                            onPressed: userValidate,
                             child: Text(
-                              'Log In',
+                              'Log In as User',
+                              style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 44),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 44,
+                          child: OutlinedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              backgroundColor: const Color(0xff7408C2),
+                            ),
+                            onPressed: adminValidate,
+                            child: Text(
+                              'Log In as Admin',
                               style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -211,9 +272,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset('images/google.jpg'),
+                    GestureDetector(
+                      onTap: () {
+                        return signInGoogle();
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset('images/google.jpg'),
+                      ),
                     ),
                     const SizedBox(
                       width: 20,
@@ -231,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Don\' have an account? ',
+                      'Don\'t have an account? ',
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 12,

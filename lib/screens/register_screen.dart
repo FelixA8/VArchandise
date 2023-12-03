@@ -122,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             labelText: 'Confirm Password'),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     ElevatedButton(
@@ -145,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             style: GoogleFonts.poppins(fontSize: 16),
                           ),
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     ElevatedButton(
