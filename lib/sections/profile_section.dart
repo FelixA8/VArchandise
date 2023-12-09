@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/provider.dart';
 import 'package:varchandise/rest/get_history_api.dart';
+import 'package:varchandise/screens/login_screen.dart';
 import 'package:varchandise/sections/profile%20sections/edit_address.dart';
 import 'package:varchandise/sections/profile%20sections/edit_profile.dart';
 
@@ -26,7 +27,11 @@ class _ProfileSectionState extends State<ProfileSection> {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences!.clear();
     // ignore: use_build_context_synchronously
-    Navigator.pop(context);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ));
   }
 
   void getUserData() async {

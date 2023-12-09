@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/rest/rest_login_api.dart';
-import 'package:varchandise/screens/home_screen.dart';
 import 'package:varchandise/screens/login_screen.dart';
+import 'package:varchandise/screens/navigation_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       String password = sharedPreferences!.getString('password').toString();
       await userLogin(email.trim(), password.trim());
       setState(() {
-        currentScreen = HomeScreen();
+        currentScreen = const NavigatorScreen();
       });
     }
   }

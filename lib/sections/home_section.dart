@@ -9,14 +9,7 @@ import 'package:varchandise/rest/product_api.dart';
 import 'package:varchandise/widgets/home_productpreview.dart';
 
 class HomeSection extends StatefulWidget {
-  const HomeSection(
-      {super.key,
-      required this.userID,
-      required this.userMail,
-      required this.userName});
-  final String userID;
-  final String userName;
-  final String userMail;
+  const HomeSection({super.key});
 
   @override
   State<HomeSection> createState() => _HomeSectionState();
@@ -24,10 +17,20 @@ class HomeSection extends StatefulWidget {
 
 class _HomeSectionState extends State<HomeSection> {
   SharedPreferences? _sharedPreferences;
+  String userID = "";
+  String userName = "";
+  String userMail = "";
+
+  void getUserData() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    userID = _sharedPreferences!.getString('customerID').toString();
+    userName = _sharedPreferences!.getString('username').toString();
+    userMail = _sharedPreferences!.getString('usermail').toString();
+  }
 
   Future getAllProductsData() async {
     Future<List<Product>>? listOfProducts;
-    listOfProducts = getProduct(widget.userID);
+    listOfProducts = getProduct(userID);
     return listOfProducts;
   }
 
@@ -36,6 +39,13 @@ class _HomeSectionState extends State<HomeSection> {
     _sharedPreferences!.clear();
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData();
   }
 
   @override
@@ -53,16 +63,8 @@ class _HomeSectionState extends State<HomeSection> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    'Welcome Back',
-                    style: GoogleFonts.poppins(fontSize: 10),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    widget.userName,
-                    style: GoogleFonts.poppins(
-                        fontSize: 14, fontWeight: FontWeight.bold),
+                    'Welcome Back!',
+                    style: GoogleFonts.poppins(fontSize: 12),
                   ),
                 ),
                 const SizedBox(

@@ -23,7 +23,6 @@ Future<List<Product>> getAllAdminProduct(String token) async {
       "Authorization": "Bearer $token",
     },
   );
-  print(token);
   var decodedData = jsonDecode(response.body);
 
   List<Product> list = [];

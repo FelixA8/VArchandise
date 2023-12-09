@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/sections/home_section.dart';
 import 'package:varchandise/sections/profile_section.dart';
 import 'package:varchandise/sections/history_section.dart';
-import 'package:varchandise/sections/home_section.dart';
 import 'package:varchandise/sections/shopping_cart_section.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class NavigatorScreen extends StatefulWidget {
+  const NavigatorScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<NavigatorScreen> createState() => _NavigatorScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _NavigatorScreenState extends State<NavigatorScreen> {
   int currentSectionIndex = 0;
   SharedPreferences? _sharedPreferences;
   String userID = "";
@@ -25,22 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Color historyButtonColor = const Color(0xff8A8A8A);
   Color accountButtonColor = const Color(0xff8A8A8A);
 
-  void getUserData() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
-    userID = _sharedPreferences!.getString('customerID').toString();
-    userName = _sharedPreferences!.getString('username').toString();
-    userMail = _sharedPreferences!.getString('usermail').toString();
-    setState(() {});
-  }
-
   void changeCurrentIndex() {
     setState(() {
       if (currentSectionIndex == 0) {
-        currentScreen = HomeSection(
-          userID: userID,
-          userMail: userMail,
-          userName: userName,
-        );
+        currentScreen = const HomeSection();
         homeButtonColor = const Color(0xff7408C2);
         cartButtonColor = const Color(0xff8A8A8A);
         historyButtonColor = const Color(0xff8A8A8A);
@@ -67,6 +55,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void getUserData() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    userID = _sharedPreferences!.getString('customerID').toString();
+    userName = _sharedPreferences!.getString('username').toString();
+    userMail = _sharedPreferences!.getString('usermail').toString();
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -75,7 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    getUserData();
     return Scaffold(
       body: currentScreen,
       bottomNavigationBar: Container(

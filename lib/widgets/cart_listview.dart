@@ -152,15 +152,17 @@ class _CartListViewState extends State<CartListView> {
                                     toggleColor: const Color(0xff7408C2),
                                     iconAlignment: Alignment.centerRight,
                                     loadingIcon: const SizedBox(
-                                        width: 55,
-                                        child: Center(
-                                            child: SizedBox(
+                                      width: 55,
+                                      child: Center(
+                                        child: SizedBox(
                                           width: 24.0,
                                           height: 24.0,
                                           child: CircularProgressIndicator(
                                               strokeWidth: 2.0,
                                               color: Colors.white),
-                                        ))),
+                                        ),
+                                      ),
+                                    ),
                                     successIcon: const SizedBox(
                                         width: 55,
                                         child: Center(
@@ -195,7 +197,7 @@ class _CartListViewState extends State<CartListView> {
                                                 userID,
                                                 listCart[i].productID,
                                                 listCart[i].cartAmount,
-                                                totalPrice);
+                                                listCart[i].price);
                                             await deleteUserCart(
                                                 listCart[i].cartID, userID);
                                           }

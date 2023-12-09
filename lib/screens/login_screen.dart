@@ -6,7 +6,7 @@ import 'package:varchandise/admin-components/admin-rest-api/admin_login.dart';
 import 'package:varchandise/admin-components/admin-screens/admin_home_screen.dart';
 import 'package:varchandise/admin-components/admin_bearertoken.dart' as bt;
 import 'package:varchandise/rest/rest_login_api.dart';
-import 'package:varchandise/screens/home_screen.dart';
+import 'package:varchandise/screens/navigation_screen.dart';
 import 'package:varchandise/screens/register_data_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   SharedPreferences? _sharedPreferences;
   var _enteredEmail = '';
   var _enteredPassword = '';
-
+  //GOOGLE SIGN IN
   final _oauth = GoogleSignIn(scopes: ['email']);
   void signInGoogle() async {
     final GoogleSignInAccount? account = await _oauth.signIn();
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
+        builder: (context) => const NavigatorScreen(),
       ),
     );
   }

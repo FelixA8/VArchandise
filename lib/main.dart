@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            home: SplashScreen(),
+            home: const SplashScreen(),
           );
         },
       ),

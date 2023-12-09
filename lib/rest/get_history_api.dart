@@ -41,7 +41,7 @@ int extractAndIncrement(String input) {
 }
 
 Future createUserHistory(String userID, String productID, int purchasedAmount,
-    int totalPrice) async {
+    int productPrice) async {
   String baseUrl = "http://10.0.2.2:3000";
   String id = "";
   var data = await getHighestHistoryID();
@@ -59,7 +59,7 @@ Future createUserHistory(String userID, String productID, int purchasedAmount,
     'historyID': id,
     'productID': productID,
     'historyAmount': purchasedAmount.toString(),
-    'totalPrice': totalPrice.toString(),
+    'totalPrice': (purchasedAmount * productPrice).toString(),
     'userID': userID
   });
   var decodedData = jsonDecode(response.body);
