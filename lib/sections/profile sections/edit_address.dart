@@ -15,17 +15,15 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
   final formKey = GlobalKey<FormState>();
 
   String userName = "";
-  String userID = "";
-  String? userMail = "";
+  String userMail = "";
   String userAddress = "";
   SharedPreferences? _sharedPreferences;
 
   void getUserData() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    userID = _sharedPreferences!.getString('customerID').toString();
     userName = _sharedPreferences!.getString('username').toString();
     userMail = _sharedPreferences!.getString('usermail').toString();
-    await getUser(userID).then((value) {
+    await getUser(userMail).then((value) {
       setState(() {
         userAddress = value.userAddress;
         if (userAddress != "") {
@@ -48,7 +46,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
         print(userAddress);
-        await updateProfile(userID, userName, userAddress);
+        await updateProfile(userMail, userName, userAddress);
       }
     }
 

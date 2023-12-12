@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,9 +18,9 @@ class ProfileSection extends StatefulWidget {
 
 class _ProfileSectionState extends State<ProfileSection> {
   SharedPreferences? _sharedPreferences;
-  String userID = "";
   String userName = "";
   String userMail = "";
+
   void logOut() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     _sharedPreferences!.clear();
@@ -30,20 +28,19 @@ class _ProfileSectionState extends State<ProfileSection> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (context) => const LoginScreen(),
         ));
   }
 
   void getUserData() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    userID = _sharedPreferences!.getString('customerID').toString();
     userName = _sharedPreferences!.getString('username').toString();
     userMail = _sharedPreferences!.getString('usermail').toString();
     setState(() {});
   }
 
   void clearHistory() async {
-    await deleteUserHistory(userID);
+    await deleteUserHistory(userMail);
   }
 
   clearHistoryAlertDialog(BuildContext context) {
@@ -151,17 +148,23 @@ class _ProfileSectionState extends State<ProfileSection> {
                 width: double.infinity,
                 child: Text(
                   'Profile',
-                  textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
+              ),
+              Container(
+                width: 200,
+                height: 5,
+                color: const Color(0xff7408C2),
               ),
               const SizedBox(
                 height: 20,
               ),
               Row(
                 children: [
-                  const CircleAvatar(radius: 70),
+                  const CircleAvatar(
+                      radius: 70,
+                      backgroundImage: AssetImage("images/steve_jobs.jpg")),
                   const SizedBox(
                     width: 20,
                   ),

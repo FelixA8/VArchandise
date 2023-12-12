@@ -13,20 +13,20 @@ class HistoryListView extends StatefulWidget {
 
 class _HistoryListViewState extends State<HistoryListView> {
   SharedPreferences? sharedPreferences;
-  String userID = "";
+  String usermail = "";
 
-  Future getCustomerID() async {
+  Future getCustomerEmail() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    userID = sharedPreferences!.getString('customerID').toString();
+    usermail = sharedPreferences!.getString('usermail').toString();
     Future<List<History>>? listOfHistory;
-    listOfHistory = getUserHistory(userID);
+    listOfHistory = getUserHistory(usermail);
     return listOfHistory;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getCustomerID(),
+      future: getCustomerEmail(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<History> listHistory =
@@ -40,7 +40,7 @@ class _HistoryListViewState extends State<HistoryListView> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 36, vertical: 10),
+                          horizontal: 15, vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

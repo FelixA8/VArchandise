@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 class History {
   History(
       {required this.historyID,
-      required this.customerID,
+      required this.customerEmail,
       required this.productID,
       required this.purchasedAmount,
       required this.totalPrice,
@@ -13,7 +13,7 @@ class History {
       required this.imgURL});
   String historyID;
   String productID;
-  String customerID;
+  String customerEmail;
   int purchasedAmount;
   int totalPrice;
   String datePurchased;
@@ -35,7 +35,7 @@ class History {
 
   factory History.fromJson(Map<String, dynamic> json) => History(
       historyID: json["HistoryID"].toString(),
-      customerID: json["CustomerID"].toString(),
+      customerEmail: json["CustomerEmail"].toString(),
       productID: json["ProductID"].toString(),
       purchasedAmount: json["PurchasedAmount"] as int,
       totalPrice: json["TotalPrice"] as int,

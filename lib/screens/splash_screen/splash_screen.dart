@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/rest/rest_login_api.dart';
 import 'package:varchandise/screens/login_screen.dart';
 import 'package:varchandise/screens/navigation_screen.dart';
+import 'package:varchandise/screens/splash_screen/splash.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   SharedPreferences? sharedPreferences;
   Widget currentScreen = const LoginScreen();
 
+  //IF user has ever login, then go to home screen. Else go to login screen
   void checkUserSavedLogin() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences!.getString('customerID') == null &&

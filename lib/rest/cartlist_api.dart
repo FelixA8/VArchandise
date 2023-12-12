@@ -5,10 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:varchandise/models/cart_models.dart';
 
 //GET CART
-Future<List<Cart>> getAllUserCart(String userID) async {
+Future<List<Cart>> getAllUserCart(String userEmail) async {
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.post(Uri.parse('$baseUrl/users/allUserCart'),
-      headers: {"Accept": "Application/json"}, body: {'userID': userID});
+      headers: {"Accept": "Application/json"},
+      body: {'customerEmail': userEmail});
   var decodedData = jsonDecode(response.body);
   List<Cart> list = [];
   for (var i in decodedData) {
@@ -44,7 +45,7 @@ int extractAndIncrement(String input) {
 
 //CREATE A NEW CART
 Future<bool> createNewUserCart(
-    String userID, String productID, int cartAmount, bool isSelected) async {
+    String userEmail, String productID, int cartAmount, bool isSelected) async {
   String isSelect = "";
   var id = "";
   if (isSelected == true) {
@@ -60,13 +61,14 @@ Future<bool> createNewUserCart(
     int inputID = extractAndIncrement(newID);
     id = 'CA${inputID.toString().padLeft(3, '0')}';
   }
+  print(id);
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http
       .post(Uri.parse('$baseUrl/users/insert-new-user-carts'), headers: {
     "Accept": "Application/json"
   }, body: {
     'cartID': id,
-    'userID': userID,
+    'userEmail': userEmail,
     'productID': productID,
     'cartAmount': cartAmount.toString(),
     'isSelected': isSelect
@@ -78,7 +80,7 @@ Future<bool> createNewUserCart(
 
 //UPDATE ANY USER CART
 Future<bool> updateNewUserCart(
-    String cartID, String userID, int cartAmount, bool isSelected) async {
+    String cartID, String userEmail, int cartAmount, bool isSelected) async {
   String isSelect = "";
   if (isSelected == true) {
     isSelect = "true";
@@ -91,7 +93,7 @@ Future<bool> updateNewUserCart(
     "Accept": "Application/json"
   }, body: {
     'cartID': cartID,
-    'userID': userID,
+    'customerEmail': userEmail,
     'cartAmount': cartAmount.toString(),
     'isSelected': isSelect
   });
@@ -101,26 +103,27 @@ Future<bool> updateNewUserCart(
 }
 
 //DELETE USER CART
-Future<bool> deleteUserCart(String cartID, String userID) async {
+Future<bool> deleteUserCart(String cartID, String userEmail) async {
   String baseUrl = "http://10.0.2.2:3000";
   final response =
       await http.delete(Uri.parse('$baseUrl/users/delete-user-cart'), headers: {
     "Accept": "Application/json"
   }, body: {
     'cartID': cartID,
-    'userID': userID,
+    'customerEmail': userEmail,
   });
   var decodedData = jsonDecode(response.body);
 
   return decodedData["success"];
 }
 
-Future<String> getTotalCartPrice(String userID) async {
+Future<String> getTotalCartPrice(String userEmail) async {
   String total = "";
   String totalFormatted = "";
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.post(Uri.parse('$baseUrl/users/SumAllCartPrice'),
-      headers: {"Accept": "Application/json"}, body: {"userID": userID});
+      headers: {"Accept": "Application/json"},
+      body: {"customerEmail": userEmail});
   var decodedData = jsonDecode(response.body);
   if (decodedData["TotalPrice"] != null) {
     total = decodedData["TotalPrice"];

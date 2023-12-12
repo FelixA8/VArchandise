@@ -16,7 +16,6 @@ class NavigatorScreen extends StatefulWidget {
 class _NavigatorScreenState extends State<NavigatorScreen> {
   int currentSectionIndex = 0;
   SharedPreferences? _sharedPreferences;
-  String userID = "";
   String userName = "";
   String userMail = "";
   Widget? currentScreen;
@@ -57,7 +56,6 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
 
   void getUserData() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    userID = _sharedPreferences!.getString('customerID').toString();
     userName = _sharedPreferences!.getString('username').toString();
     userMail = _sharedPreferences!.getString('usermail').toString();
     setState(() {});

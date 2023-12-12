@@ -6,7 +6,10 @@ import 'package:varchandise/models/cart_models.dart';
 import 'package:varchandise/models/category_types.dart';
 import 'package:varchandise/models/product_models.dart';
 import 'package:varchandise/rest/product_api.dart';
-import 'package:varchandise/widgets/home_productpreview.dart';
+import 'package:varchandise/widgets/homeCategoies/all_gridview.dart';
+import 'package:varchandise/widgets/homeCategoies/anime_gridview.dart';
+import 'package:varchandise/widgets/homeCategoies/disney_gridview.dart';
+import 'package:varchandise/widgets/homeCategoies/superhero_gridview.dart';
 
 class HomeSection extends StatefulWidget {
   const HomeSection({super.key});
@@ -17,20 +20,18 @@ class HomeSection extends StatefulWidget {
 
 class _HomeSectionState extends State<HomeSection> {
   SharedPreferences? _sharedPreferences;
-  String userID = "";
   String userName = "";
   String userMail = "";
 
   void getUserData() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    userID = _sharedPreferences!.getString('customerID').toString();
     userName = _sharedPreferences!.getString('username').toString();
     userMail = _sharedPreferences!.getString('usermail').toString();
   }
 
   Future getAllProductsData() async {
     Future<List<Product>>? listOfProducts;
-    listOfProducts = getProduct(userID);
+    listOfProducts = getProduct(userMail);
     return listOfProducts;
   }
 
@@ -39,6 +40,32 @@ class _HomeSectionState extends State<HomeSection> {
     _sharedPreferences!.clear();
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
+  }
+
+  void selectAction(Category category) {
+    if (category == Category.none) {
+      categoryList[0].isSelected = true;
+      categoryList[1].isSelected = false;
+      categoryList[2].isSelected = false;
+      categoryList[3].isSelected = false;
+    } else if (category == Category.anime) {
+      categoryList[0].isSelected = false;
+      categoryList[1].isSelected = true;
+      categoryList[2].isSelected = false;
+      categoryList[3].isSelected = false;
+    } else if (category == Category.disney) {
+      categoryList[0].isSelected = false;
+      categoryList[1].isSelected = false;
+      categoryList[2].isSelected = true;
+      categoryList[3].isSelected = false;
+    } else if (category == Category.superhero) {
+      categoryList[0].isSelected = false;
+      categoryList[1].isSelected = false;
+      categoryList[2].isSelected = false;
+      categoryList[3].isSelected = true;
+    }
+
+    setState(() {});
   }
 
   @override
@@ -68,7 +95,7 @@ class _HomeSectionState extends State<HomeSection> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -162,9 +189,25 @@ class _HomeSectionState extends State<HomeSection> {
                     scrollDirection: Axis.horizontal,
                     itemCount: categoryList.length,
                     itemBuilder: (context, index) {
-                      return CategoryButton(
-                        title: categoryList[index].categTitle,
-                        category: categoryList[index].category,
+                      return OutlinedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          backgroundColor: categoryList[index].isSelected
+                              ? const Color(0xff7408C2).withOpacity(0.7)
+                              : const Color(0xff7408C2),
+                        ),
+                        onPressed: () {
+                          selectAction(categoryList[index].category);
+                        },
+                        child: Text(
+                          categoryList[index].categTitle,
+                          style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500),
+                        ),
                       );
                     },
                   ),
@@ -185,7 +228,15 @@ class _HomeSectionState extends State<HomeSection> {
                     if (snapshot.hasData) {
                       List<Product> listProducts =
                           snapshot.data as List<Product>;
-                      return ProductPreviewHome(listProducts: listProducts);
+                      if (categoryList[0].isSelected == true) {
+                        return ProductPreviewHome(listProducts: listProducts);
+                      } else if (categoryList[1].isSelected == true) {
+                        return AnimeGridView(listProducts: listProducts);
+                      } else if (categoryList[2].isSelected == true) {
+                        return DisneyGridView(listProducts: listProducts);
+                      } else if (categoryList[3].isSelected == true) {
+                        return SuperHeroGridView(listProducts: listProducts);
+                      }
                     }
                     return const Center();
                   },
@@ -194,33 +245,5 @@ class _HomeSectionState extends State<HomeSection> {
             ),
           ),
         ));
-  }
-}
-
-class CategoryButton extends StatelessWidget {
-  const CategoryButton({
-    super.key,
-    required this.category,
-    required this.title,
-  });
-  final String title;
-  final Category category;
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        backgroundColor: const Color(0xff7408C2),
-      ),
-      onPressed: () {},
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-    );
   }
 }

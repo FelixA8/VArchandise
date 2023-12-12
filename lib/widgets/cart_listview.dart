@@ -18,13 +18,13 @@ class CartListView extends StatefulWidget {
 
 class _CartListViewState extends State<CartListView> {
   SharedPreferences? sharedPreferences;
-  String userID = "";
+  String customerEmail = "";
 
-  Future getCustomerID() async {
+  Future getCustomerMail() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    userID = sharedPreferences!.getString('customerID').toString();
+    customerEmail = sharedPreferences!.getString('usermail').toString();
     Future<List<Cart>>? listOfCart;
-    listOfCart = getAllUserCart(userID);
+    listOfCart = getAllUserCart(customerEmail);
     return listOfCart;
   }
 
@@ -61,28 +61,28 @@ class _CartListViewState extends State<CartListView> {
   Widget build(BuildContext context) {
     void addItem(String cartID, int cartAmount, bool isSelected) async {
       cartAmount += 1;
-      await updateNewUserCart(cartID, userID, cartAmount, isSelected);
+      await updateNewUserCart(cartID, customerEmail, cartAmount, isSelected);
       setState(() {});
     }
 
     void reduceItem(String cartID, int cartAmount, bool isSelected) async {
       cartAmount -= 1;
-      await updateNewUserCart(cartID, userID, cartAmount, isSelected);
+      await updateNewUserCart(cartID, customerEmail, cartAmount, isSelected);
       setState(() {});
     }
 
     void checkItem(String cartID, int cartAmount, bool isSelected) async {
-      await updateNewUserCart(cartID, userID, cartAmount, isSelected);
+      await updateNewUserCart(cartID, customerEmail, cartAmount, isSelected);
       setState(() {});
     }
 
-    void deleteItem(String cartID, String userID) async {
-      await deleteUserCart(cartID, userID);
+    void deleteItem(String cartID, String customerEmail) async {
+      await deleteUserCart(cartID, customerEmail);
       setState(() {});
     }
 
     return FutureBuilder(
-      future: getCustomerID(),
+      future: getCustomerMail(),
       builder: (context, snapshot) {
         bool anySelectedItem = false;
         int totalPrice = 0;
@@ -110,7 +110,7 @@ class _CartListViewState extends State<CartListView> {
                         itemBuilder: (context, index) {
                           return ListCartUI(
                             listCart: listCart,
-                            userID: userID,
+                            customerEmail: customerEmail,
                             addItem: addItem,
                             reduceItem: reduceItem,
                             checkItem: checkItem,
@@ -194,12 +194,13 @@ class _CartListViewState extends State<CartListView> {
                                                 listCart[i].productID,
                                                 listCart[i].cartAmount);
                                             await createUserHistory(
-                                                userID,
+                                                customerEmail,
                                                 listCart[i].productID,
                                                 listCart[i].cartAmount,
                                                 listCart[i].price);
                                             await deleteUserCart(
-                                                listCart[i].cartID, userID);
+                                                listCart[i].cartID,
+                                                customerEmail);
                                           }
                                         }
                                         setState(() {

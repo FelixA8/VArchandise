@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:varchandise/rest/rest_login_api.dart';
 import 'package:varchandise/screens/register_screen.dart';
 
 class RegisterDataScreen extends StatefulWidget {
-  const RegisterDataScreen({super.key});
+  const RegisterDataScreen(
+      {super.key, required this.googleSignIn, required this.googleEmail});
+  final bool googleSignIn;
+  final String googleEmail;
 
   @override
   State<RegisterDataScreen> createState() => _RegisterDataScreenState();
@@ -17,26 +21,24 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
   String newUserPassword = '';
 
   void goToRegisterDataScreen() {
-    validate();
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) {
-        return RegisterScreen(
-          newUserAddress: newUserAddress,
-          newUserName: newUserName,
-        );
-      },
-    ));
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      Navigator.push(context, MaterialPageRoute(
+        builder: (context) {
+          return RegisterScreen(
+            newUserAddress: newUserAddress,
+            newUserName: newUserName,
+          );
+        },
+      ));
+    }
   }
 
   void backToLoginScreen() {
     Navigator.pop(context);
   }
 
-  void validate() async {
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-    }
-  }
+  void validate() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +79,12 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                                   onSaved: (newValue) {
                                     newUserName = newValue!;
                                   },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    return null;
+                                  },
                                   keyboardType: TextInputType.name,
                                   decoration: const InputDecoration(
                                       labelText: 'Full Name'),
@@ -89,6 +97,12 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                                 TextFormField(
                                   onSaved: (newValue) {
                                     newUserAddress = newValue!;
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    return null;
                                   },
                                   keyboardType: TextInputType.name,
                                   decoration: const InputDecoration(
@@ -107,7 +121,12 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                                         Color(0xff7408C2)),
                                   ),
                                   onPressed: () {
-                                    goToRegisterDataScreen();
+                                    if (widget.googleSignIn == false) {
+                                      goToRegisterDataScreen();
+                                    } else {
+                                      userRegister(newUserName, newUserAddress,
+                                          widget.googleEmail, "");
+                                    }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(

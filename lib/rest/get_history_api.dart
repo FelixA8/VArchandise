@@ -4,10 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:varchandise/models/history_models.dart';
 
 //GET HISTORY
-Future<List<History>> getUserHistory(String userID) async {
+Future<List<History>> getUserHistory(String userEmail) async {
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.post(Uri.parse('$baseUrl/users/AllUserHistory'),
-      headers: {"Accept": "Application/json"}, body: {'userID': userID});
+      headers: {"Accept": "Application/json"},
+      body: {'customerEmail': userEmail});
   var decodedData = jsonDecode(response.body);
   List<History> list = [];
   for (var i in decodedData) {
@@ -40,8 +41,8 @@ int extractAndIncrement(String input) {
   return incrementedNumber;
 }
 
-Future createUserHistory(String userID, String productID, int purchasedAmount,
-    int productPrice) async {
+Future createUserHistory(String userEmail, String productID,
+    int purchasedAmount, int productPrice) async {
   String baseUrl = "http://10.0.2.2:3000";
   String id = "";
   var data = await getHighestHistoryID();
@@ -60,17 +61,17 @@ Future createUserHistory(String userID, String productID, int purchasedAmount,
     'productID': productID,
     'historyAmount': purchasedAmount.toString(),
     'totalPrice': (purchasedAmount * productPrice).toString(),
-    'userID': userID
+    'customerEmail': userEmail
   });
   var decodedData = jsonDecode(response.body);
   return decodedData;
 }
 
-Future deleteUserHistory(String userID) async {
+Future deleteUserHistory(String userEmail) async {
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http.delete(
       Uri.parse('$baseUrl/users/delete-user-history'),
       headers: {"Accept": "Application/json"},
-      body: {'userID': userID});
+      body: {'customerEmail': userEmail});
   return response;
 }

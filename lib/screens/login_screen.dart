@@ -24,11 +24,18 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredPassword = '';
   //GOOGLE SIGN IN
   final _oauth = GoogleSignIn(scopes: ['email']);
+
   void signInGoogle() async {
     final GoogleSignInAccount? account = await _oauth.signIn();
     if (account != null) {
       print("User's email: ${account.email}");
       print("User's name: ${account.displayName}");
+      var hasLoggedIn = await userLogin(account.email, "");
+      if (!hasLoggedIn["success"]) {
+        print('hi');
+      } else {
+        print('how');
+      }
     }
   }
 
@@ -41,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //VALIDATE EMAIL AND PASSWORD INPUTTED. IF SUCCESS, THEN DO USER LOGIN
   void userValidate() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -48,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  //ADMIN LOGIN
   void adminValidate() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -55,14 +64,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  //GO TO REGISTER SCREEN
   void changeToSignInScreen() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) {
-        return const RegisterDataScreen();
+        return const RegisterDataScreen(
+          googleSignIn: false,
+          googleEmail: "",
+        );
       },
     ));
   }
 
+  //ADMIN LOGIN
   loginAdmin(email, password) async {
     var res = await adminLogin(email, password);
     if (res["success"]) {
@@ -75,25 +89,50 @@ class _LoginScreenState extends State<LoginScreen> {
           ));
     } else {
       //ERROR
+      // ignore: use_build_context_synchronously
+      showAlertDialog(context);
     }
   }
 
+  //USER LOGIN
   loginUser(String email, String password) async {
     _sharedPreferences = await SharedPreferences.getInstance();
     var res = await userLogin(email.trim(), password.trim());
     if (res["success"]) {
       var userEmail = res['user'][0]['CustomerEmail'];
-      String customerID = res['user'][0]['CustomerID'].toString();
       String userName = res['user'][0]['CustomerName'].toString();
-      _sharedPreferences!.setString('customerID', customerID);
       _sharedPreferences!.setString('usermail', userEmail);
       _sharedPreferences!.setString('password', password);
       _sharedPreferences!.setString('username', userName);
 
       changeScreenToHomeScreen(res);
     } else if (res["success"] == false) {
-      print("WRONG PASSWORD");
+      // ignore: use_build_context_synchronously
+      showAlertDialog(context);
     }
+  }
+
+  showAlertDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: SizedBox(
+              height: 90,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Center(
+                  child: Text(
+                    'Wrong email or password, please try again',
+                    style: GoogleFonts.poppins(fontSize: 14),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   @override

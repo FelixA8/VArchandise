@@ -7,7 +7,7 @@ class ListCartUI extends StatelessWidget {
   const ListCartUI(
       {super.key,
       required this.listCart,
-      required this.userID,
+      required this.customerEmail,
       required this.index,
       required this.addItem,
       required this.checkItem,
@@ -16,7 +16,7 @@ class ListCartUI extends StatelessWidget {
 
   final List<Cart> listCart;
   final int index;
-  final String userID;
+  final String customerEmail;
   final void Function(String, int, bool) addItem;
   final void Function(String, int, bool) reduceItem;
   final void Function(String, int, bool) checkItem;
@@ -25,7 +25,7 @@ class ListCartUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -67,12 +67,16 @@ class ListCartUI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Flexible(
-                    child: Text(
-                      listCart[index].productTitle,
-                      style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black),
+                    child: SizedBox(
+                      width: 120,
+                      child: Text(
+                        listCart[index].productTitle,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
                     ),
                   ),
                   Text(
@@ -125,91 +129,84 @@ class ListCartUI extends StatelessWidget {
                       },
                     ),
                   ),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: IconButton(
-                            onPressed: () {
-                              deleteItem(listCart[index].cartID, userID);
-                            },
-                            icon: const Icon(
-                              FontAwesomeIcons.trashCan,
-                              size: 20,
-                            ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: IconButton(
+                          onPressed: () {
+                            deleteItem(listCart[index].cartID, customerEmail);
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.trashCan,
+                            size: 20,
                           ),
                         ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: listCart[index].cartAmount == 1
-                              ? IconButton(
-                                  onPressed: () {
-                                    reduceItem(
-                                        listCart[index].cartID,
-                                        listCart[index].cartAmount,
-                                        listCart[index].isSelected);
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.minus,
-                                    size: 12,
-                                    color: Color.fromRGBO(0, 0, 0, 0.2),
-                                  ),
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    reduceItem(
-                                        listCart[index].cartID,
-                                        listCart[index].cartAmount,
-                                        listCart[index].isSelected);
-                                  },
-                                  icon: const Icon(
-                                    FontAwesomeIcons.minus,
-                                    size: 12,
-                                    color: Color(0xff7408C2),
-                                  ),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: listCart[index].cartAmount == 1
+                            ? IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  FontAwesomeIcons.minus,
+                                  size: 12,
+                                  color: Color.fromRGBO(0, 0, 0, 0.2),
                                 ),
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  reduceItem(
+                                      listCart[index].cartID,
+                                      listCart[index].cartAmount,
+                                      listCart[index].isSelected);
+                                },
+                                icon: const Icon(
+                                  FontAwesomeIcons.minus,
+                                  size: 12,
+                                  color: Color(0xff7408C2),
+                                ),
+                              ),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          listCart[index].cartAmount.toString(),
+                          style: GoogleFonts.poppins(
+                              fontSize: 14, color: Colors.black),
                         ),
-                        const SizedBox(
-                          width: 12,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            listCart[index].cartAmount.toString(),
-                            style: GoogleFonts.poppins(
-                                fontSize: 14, color: Colors.black),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(right: 5),
+                        height: 20,
+                        width: 20,
+                        child: IconButton(
+                          onPressed: () {
+                            addItem(
+                                listCart[index].cartID,
+                                listCart[index].cartAmount,
+                                listCart[index].isSelected);
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.plus,
+                            size: 12,
+                            color: Color(0xff7408C2),
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(right: 5),
-                          height: 20,
-                          width: 20,
-                          child: IconButton(
-                            onPressed: () {
-                              addItem(
-                                  listCart[index].cartID,
-                                  listCart[index].cartAmount,
-                                  listCart[index].isSelected);
-                            },
-                            icon: const Icon(
-                              FontAwesomeIcons.plus,
-                              size: 12,
-                              color: Color(0xff7408C2),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),

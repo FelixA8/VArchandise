@@ -16,7 +16,7 @@ class Cart {
       required this.price,
       required this.isSelected,
       required this.cartAmount,
-      required this.customerID,
+      required this.customerEmail,
       required this.productID,
       required this.productStock,
       required this.totalPrice});
@@ -28,7 +28,7 @@ class Cart {
   int price;
   String cartID;
   String productID;
-  String customerID;
+  String customerEmail;
   int totalPrice;
   int productStock;
 
@@ -68,7 +68,7 @@ class Cart {
 
     return Cart(
         cartID: json["CartID"].toString(),
-        customerID: json["CustomerID"].toString(),
+        customerEmail: json["CustomerEmail"].toString(),
         productID: json["ProductID"].toString(),
         cartAmount: json["CartAmount"] as int,
         category: category,

@@ -45,8 +45,8 @@ class _ProductScreenState extends State<ProductScreen> {
 
   void addNewCart() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    String userID = sharedPreferences!.getString('customerID').toString();
-    createNewUserCart(userID, widget.product.productID, 1, false);
+    String userMail = sharedPreferences!.getString('usermail').toString();
+    createNewUserCart(userMail, widget.product.productID, 1, false);
   }
 
   @override

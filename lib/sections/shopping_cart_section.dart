@@ -14,13 +14,25 @@ class _ShoppingCartSectionState extends State<ShoppingCartSection> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Text(
-              'Cart',
-              style: GoogleFonts.poppins(
-                  fontSize: 16, fontWeight: FontWeight.bold),
+            child: SizedBox(
+              width: double.infinity,
+              child: Text(
+                'Cart',
+                style: GoogleFonts.poppins(
+                    fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+              width: 200,
+              height: 5,
+              color: const Color(0xff7408C2),
             ),
           ),
           const SizedBox(
