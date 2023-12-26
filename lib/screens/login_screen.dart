@@ -27,19 +27,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void signInGoogle() async {
     final GoogleSignInAccount? account = await _oauth.signIn();
+    _sharedPreferences = await SharedPreferences.getInstance();
     if (account != null) {
-      print("User's email: ${account.email}");
-      print("User's name: ${account.displayName}");
       var hasLoggedIn = await userLogin(account.email, "");
       if (!hasLoggedIn["success"]) {
-        print('hi');
+        //VALIDATE GOOGLE SIGN IN. IF USER HAS EVER SIGN IN WITH GOOGLE, PROCEED TO HOME PAGE.
+        //IF NOT, PROCEED TO REGISTER NAME, ADDRESS PAGE.
+        var res = await checkGoogleLogin(account.email);
+        if (res["success"]) {
+          var userEmail = account.email;
+          String userName = account.displayName.toString();
+          _sharedPreferences!.setString('usermail', userEmail);
+          _sharedPreferences!.setString('username', userName);
+          changeScreenToHomeScreen();
+        } else {
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RegisterDataScreen(
+                    googleSignIn: true, googleEmail: account.email),
+              ));
+        }
       } else {
-        print('how');
+        showAlertDialog(context);
       }
     }
   }
 
-  void changeScreenToHomeScreen(res) {
+  void changeScreenToHomeScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -80,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
   loginAdmin(email, password) async {
     var res = await adminLogin(email, password);
     if (res["success"]) {
-      bt.bearerToken = "LSKDJFLS.DFKJSA.DF3DJKC3I2U";
+      bt.bearerToken = res["message"];
       // ignore: use_build_context_synchronously
       Navigator.push(
           context,
@@ -105,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _sharedPreferences!.setString('password', password);
       _sharedPreferences!.setString('username', userName);
 
-      changeScreenToHomeScreen(res);
+      changeScreenToHomeScreen();
     } else if (res["success"] == false) {
       // ignore: use_build_context_synchronously
       showAlertDialog(context);

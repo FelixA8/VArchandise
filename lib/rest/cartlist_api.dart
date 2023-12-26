@@ -61,7 +61,6 @@ Future<bool> createNewUserCart(
     int inputID = extractAndIncrement(newID);
     id = 'CA${inputID.toString().padLeft(3, '0')}';
   }
-  print(id);
   String baseUrl = "http://10.0.2.2:3000";
   final response = await http
       .post(Uri.parse('$baseUrl/users/insert-new-user-carts'), headers: {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/rest/rest_login_api.dart';
+import 'package:varchandise/screens/navigation_screen.dart';
 import 'package:varchandise/screens/register_screen.dart';
 
 class RegisterDataScreen extends StatefulWidget {
@@ -31,6 +33,21 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
           );
         },
       ));
+    }
+  }
+
+  void signInGoogle() async {
+    if (formKey.currentState!.validate()) {
+      var _sharedPreferences = await SharedPreferences.getInstance();
+      formKey.currentState!.save();
+      await userRegister(newUserName, newUserAddress, widget.googleEmail, "");
+      _sharedPreferences.setString('usermail', widget.googleEmail);
+      _sharedPreferences.setString('username', newUserName);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigatorScreen(),
+          ));
     }
   }
 
@@ -124,15 +141,16 @@ class _RegisterDataScreenState extends State<RegisterDataScreen> {
                                     if (widget.googleSignIn == false) {
                                       goToRegisterDataScreen();
                                     } else {
-                                      userRegister(newUserName, newUserAddress,
-                                          widget.googleEmail, "");
+                                      signInGoogle();
                                     }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 65, vertical: 10),
                                     child: Text(
-                                      'Next',
+                                      widget.googleSignIn
+                                          ? 'Sign In to Google'
+                                          : 'Next',
                                       style: GoogleFonts.poppins(fontSize: 16),
                                     ),
                                   ),

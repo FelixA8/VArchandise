@@ -20,7 +20,6 @@ Future updateProfile(
   var decodedData = jsonDecode(response.body);
   _sharedPreferences = await SharedPreferences.getInstance();
   await _sharedPreferences.setString('username', userName);
-  print(userName);
   return decodedData;
 }
 
@@ -30,7 +29,6 @@ Future<User> getUser(String customerEmail) async {
       headers: {"Accept": "Application/json"},
       body: {'customerEmail': customerEmail});
   var decodedData = jsonDecode(response.body);
-  print(decodedData);
   User decoded = User.fromJson(decodedData[0]);
   return decoded;
 }

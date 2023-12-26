@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/provider.dart';
 import 'package:varchandise/rest/get_history_api.dart';
 import 'package:varchandise/screens/login_screen.dart';
+import 'package:varchandise/sections/profile%20sections/about_us.dart';
 import 'package:varchandise/sections/profile%20sections/edit_address.dart';
 import 'package:varchandise/sections/profile%20sections/edit_profile.dart';
 
@@ -30,6 +32,8 @@ class _ProfileSectionState extends State<ProfileSection> {
         MaterialPageRoute(
           builder: (context) => const LoginScreen(),
         ));
+    final _oauth = GoogleSignIn(scopes: ['email']);
+    await _oauth.signOut();
   }
 
   void getUserData() async {
@@ -267,7 +271,13 @@ class _ProfileSectionState extends State<ProfileSection> {
                   keyword: "",
                   showArrow: true),
               EditProfileCategories(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsScreen(),
+                        ));
+                  },
                   description: "",
                   title: "About Us",
                   icon: const Icon(FontAwesomeIcons.info),

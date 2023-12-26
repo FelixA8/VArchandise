@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:varchandise/rest/rest_login_api.dart';
 import 'package:varchandise/screens/login_screen.dart';
 import 'package:varchandise/screens/navigation_screen.dart';
-import 'package:varchandise/screens/splash_screen/splash.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

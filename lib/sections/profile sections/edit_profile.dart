@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:varchandise/provider.dart';
 import 'package:varchandise/rest/profile_user_api.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -42,19 +44,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     void validate() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
         await updateProfile(userMail, userName, userAddress);
+        Navigator.pop(context);
       }
     }
 
     return Scaffold(
       appBar: AppBar(
         leading: GestureDetector(
-          child: const Icon(
+          child: Icon(
             FontAwesomeIcons.circleChevronLeft,
-            color: Colors.black,
+            color: themeChange.darkTheme ? Colors.white : Colors.black,
             size: 25,
           ),
           onTap: () {
@@ -64,10 +68,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text(
           "Edit Profile",
           style: GoogleFonts.poppins(
-              color: Colors.black, fontWeight: FontWeight.w600),
+              color: themeChange.darkTheme ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: themeChange.darkTheme ? Colors.black : Colors.white,
         elevation: 0,
       ),
       body: Padding(
